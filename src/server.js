@@ -1,10 +1,10 @@
-'use strict';
+"use strict";
 
-require('dotenv').config()
-const line = require('@line/bot-sdk');
-const express = require('express');
-const findBus = require('./findBus')
-const timeTableUniv = require('./timeTable')
+require("dotenv").config()
+const line = require("@line/bot-sdk");
+const express = require("express");
+const findBus = require("./findBus")
+const timeTableUniv = require("./timeTable")
 
 const config = {
   channelAccessToken: process.env.CHANNEL_ACCESS_TOKEN,
@@ -14,7 +14,7 @@ const config = {
 const client = new line.Client(config);
 const app = express();
 let result = ""
-app.post('/callback', line.middleware(config), (req, res) => {
+app.post("/callback", line.middleware(config), (req, res) => {
   Promise
     .all(req.body.events.map(handleEvent))
     .then((result) => res.json(result))
@@ -25,7 +25,7 @@ app.post('/callback', line.middleware(config), (req, res) => {
 });
 
 function handleEvent(event) {
-  if (event.type !== 'message' || event.message.type !== 'text') {
+  if (event.type !== "message" || event.message.type !== "text") {
     return Promise.resolve(null);
   }
   result = ""

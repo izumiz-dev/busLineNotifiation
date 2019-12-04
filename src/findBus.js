@@ -1,4 +1,5 @@
-const moment = require("moment")
+const moment = require("moment-timezone")
+moment.tz.setDefault("Asia/Tokyo")
 
 const findBus = data => {
   const res = []
