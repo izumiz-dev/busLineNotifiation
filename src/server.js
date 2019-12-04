@@ -3,8 +3,8 @@
 require("dotenv").config()
 const line = require("@line/bot-sdk");
 const express = require("express");
-const findBus = require("./findBus")
-const timeTableUniv = require("./timeTable")
+const busNotifier = require("./busNotifier")
+
 
 const config = {
   channelAccessToken: process.env.CHANNEL_ACCESS_TOKEN,
@@ -24,29 +24,20 @@ app.post("/callback", line.middleware(config), (req, res) => {
     });
 });
 
-function handleEvent(event) {
-  if (event.type !== "message" || event.message.type !== "text") {
-    return Promise.resolve(null);
-  }
-  result = ""
-  if (event.message.text === "バス") {
-    const busTimes = findBus(timeTableUniv)
-    if (busTimes.length < 1) {
-      result = "現在バスはありません"
-    } else {
-      result += "⌚️1時間以内の出発予定のバス🚌\n"
-      busTimes.forEach((bus, index) => {
-        result += `${bus.time.toString()}発 ${bus.mins} 分後\n`
-      })
-      result = result.slice(0, -1)
-    }
-  } else {
-    result = "1時間以内に発車予定のバスの時刻表を返すBotです．現在開発中..."
-  }
-  const text = { type: "text", text: result }
 
-  return client.replyMessage(event.replyToken, text);
+function handleEvent(event) {
+  try {
+    if (event.type !== "message" || event.message.type !== "text") {
+      return Promise.resolve(null);
+    }
+    result = busNotifier(event)
+    return client.replyMessage(event.replyToken, { type: "text", text: result });
+  } catch (error) {
+    console.error(error)
+    return client.replyMessage(event.replyToken, { type: "text", text: `${error}` });
+  }
 }
+
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
