@@ -15,8 +15,8 @@ const busNotifier = event => {
   } else if (event.message.text === "バスセンター" || event.message.text === "行き") {
     result += "バスセンター発 - 大学行\n"
     busTimeTable = timeTableBusCenter
-  } else if (event.message.text.includes("バス") || event.message.text.includes("ヘルプ")) {
-    return "・「行き」もしくは「バスセンター」を送信すると，バスセンター発\n・「帰り」もしくは「大学」を送信すると大学発\nのバス出発時刻を返信します"
+  } else {
+    return "-「行き」もしくは「バスセンター」を送信すると，バスセンター発\n-「帰り」もしくは「大学」を送信すると大学発\nのバス出発時刻を返信します"
   }
   const findedBus = findBus(busTimeTable)
   if (findedBus.length === 0) {
