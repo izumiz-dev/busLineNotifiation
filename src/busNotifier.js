@@ -6,7 +6,7 @@ const timeTableBusCenter = require("../timetables/timeTableBusCenter.json")
 const busNotifier = event => {
   let result = ""
   let busTimeTable
-  if ([6, 5].includes(moment().day())) {
+  if ([0, 6].includes(moment().day())) {
     return "現在，土曜日・日曜日に対応しておりません 😭"
   }
   if (event.message.text === "大学" || event.message.text === "帰り") {
