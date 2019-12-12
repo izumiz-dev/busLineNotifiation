@@ -14,6 +14,7 @@ const config = {
 const client = new line.Client(config);
 const app = express();
 let result = ""
+
 app.post("/callback", line.middleware(config), (req, res) => {
   Promise
     .all(req.body.events.map(handleEvent))
@@ -26,11 +27,13 @@ app.post("/callback", line.middleware(config), (req, res) => {
 
 
 function handleEvent(event) {
+  console.log("event: ", event)
   try {
     if (event.type !== "message" || event.message.type !== "text") {
       return Promise.resolve(null);
     }
     result = busNotifier(event)
+    console.log("results: ", result)
     return client.replyMessage(event.replyToken, { type: "text", text: result });
   } catch (error) {
     console.error(error)
